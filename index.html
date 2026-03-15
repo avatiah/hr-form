@@ -6,109 +6,124 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap');
-        body { font-family: 'Assistant', sans-serif; background: transparent; margin: 0; padding: 15px; overflow-x: hidden; }
-        /* Принудительное исправление для Osclass */
-        input, select, textarea { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
-        .step { animation: fadeIn 0.3s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        body { 
+            font-family: 'Assistant', sans-serif; 
+            background: #ffffff; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center;
+        }
+        /* Принудительный сброс всех внешних стилей */
+        .full-width-input {
+            width: 100% !important;
+            display: block !important;
+            box-sizing: border-box !important;
+            appearance: none !important;
+        }
     </style>
 </head>
-<body>
+<body class="bg-gray-50">
 
-<div class="max-w-full mx-auto bg-white rounded-2xl shadow-lg border border-gray-200 p-5 md:p-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-4 text-center">טופס הגשת מועמדות</h2>
+<div class="w-full max-w-2xl bg-white rounded-3xl shadow-xl border border-gray-100 p-6 md:p-10">
+    <header class="text-center mb-10">
+        <h2 class="text-3xl font-black text-gray-800 tracking-tight">טופס הגשת מועמדות</h2>
+        <div class="h-1.5 w-20 bg-blue-600 mx-auto mt-4 rounded-full"></div>
+    </header>
 
-    <form id="hrForm" class="space-y-6">
-        <div id="step1" class="step space-y-5">
-            <div class="w-full">
-                <label class="block text-sm font-bold text-gray-700 mb-1">שם מלא</label>
-                <input type="text" name="fullName" required class="p-3 border-2 border-gray-100 rounded-xl bg-gray-50 focus:border-blue-500 focus:bg-white outline-none">
+    <form id="hrForm" class="space-y-8 text-right">
+        <div id="step1" class="space-y-6">
+            <div class="space-y-2">
+                <label class="block text-sm font-bold text-gray-600 mr-1 italic">שם מלא</label>
+                <input type="text" name="fullName" placeholder="ישראל ישראלי" required 
+                    class="full-width-input p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all">
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="w-full">
-                    <label class="block text-sm font-bold text-gray-700 mb-1">מספר טלפון</label>
-                    <input type="tel" name="phone" required class="p-3 border-2 border-gray-100 rounded-xl bg-gray-50 focus:border-blue-500 focus:bg-white outline-none">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-gray-600 mr-1 italic">מספר טלפון</label>
+                    <input type="tel" name="phone" placeholder="050-0000000" required 
+                        class="full-width-input p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all">
                 </div>
-                <div class="w-full">
-                    <label class="block text-sm font-bold text-gray-700 mb-1">דואר אלקטרוני</label>
-                    <input type="email" name="email" required class="p-3 border-2 border-gray-100 rounded-xl bg-gray-50 focus:border-blue-500 focus:bg-white outline-none">
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-gray-600 mr-1 italic">דואר אלקטרוני</label>
+                    <input type="email" name="email" placeholder="mail@example.com" required 
+                        class="full-width-input p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all">
                 </div>
             </div>
 
-            <div class="w-full">
-                <label class="block text-sm font-bold text-gray-700 mb-1">הגשת מועמדות עבור משרה מספר</label>
-                <input type="text" name="positionId" class="p-3 border-2 border-gray-100 rounded-xl bg-gray-50 focus:border-blue-500 focus:bg-white outline-none">
+            <div class="space-y-2">
+                <label class="block text-sm font-bold text-gray-600 mr-1 italic">הגשת מועמדות עבור משרה מספר</label>
+                <input type="text" name="positionId" placeholder="Например: 1024" 
+                    class="full-width-input p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:border-blue-500 focus:bg-white transition-all">
             </div>
 
-            <div class="pt-4 text-center border-t">
-                <p class="font-bold text-gray-800 mb-4">האם יש לך את הניסיון הנדרש למשרה?</p>
-                <div class="flex gap-3">
-                    <button type="button" onclick="goTo('step2')" class="flex-1 py-4 bg-green-600 text-white font-bold rounded-xl shadow-md hover:bg-green-700 transition">כן</button>
-                    <button type="button" onclick="goTo('stepLow')" class="flex-1 py-4 bg-red-500 text-white font-bold rounded-xl shadow-md hover:bg-red-600 transition">לא</button>
+            <div class="bg-blue-50/50 p-6 rounded-3xl border border-blue-100 mt-8">
+                <p class="text-lg font-bold text-gray-800 mb-6 text-center">האם יש לך את הניסיון הנדרש למשרה?</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button type="button" onclick="goTo('step2')" class="flex-1 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl shadow-lg shadow-blue-200 transition-all active:scale-95">כן, יש לי ניсиון</button>
+                    <button type="button" onclick="goTo('stepLow')" class="flex-1 py-4 bg-white border-2 border-gray-200 text-gray-600 font-bold rounded-2xl hover:bg-gray-50 transition-all active:scale-95">לא, אין לי ניסיון</button>
                 </div>
             </div>
         </div>
 
-        <div id="step2" class="step hidden space-y-5">
-            <div class="w-full">
-                <label class="block text-sm font-bold text-gray-700 mb-2">איך תרצה להגיש את קורות החיים?</label>
-                <select id="cvMethod" onchange="toggleInputs()" class="p-3 border-2 border-gray-100 rounded-xl bg-gray-50 outline-none">
+        <div id="step2" class="hidden space-y-6 animate-[fadeIn_0.4s_ease-out]">
+            <div class="space-y-2">
+                <label class="block text-sm font-bold text-gray-700 text-center mb-4">איך תרצה להגיש את קורות החיים?</label>
+                <select id="cvMethod" onchange="toggleInputs()" class="full-width-input p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl font-bold outline-none focus:border-blue-500 focus:bg-white">
                     <option value="">בחר אפשרות...</option>
                     <option value="file">📄 העלאת קובץ קורות חיים</option>
-                    <option value="link">🔗 קישור ל-LinkedIn</option>
+                    <option value="link">🔗 קישור לפרופיל LinkedIn</option>
                 </select>
             </div>
 
-            <div id="fileInputDiv" class="hidden w-full border-2 border-dashed rounded-xl p-6 text-center bg-blue-50">
-                <input type="file" id="cvFile" class="text-sm">
-                <p class="text-xs text-gray-400 mt-2">PDF, DOCX (Max 10MB)</p>
+            <div id="fileInputDiv" class="hidden border-2 border-dashed border-blue-200 rounded-2xl p-8 text-center bg-blue-50/30">
+                <input type="file" id="cvFile" class="text-sm font-medium text-gray-500">
             </div>
 
-            <div id="linkInputDiv" class="hidden w-full">
-                <input type="url" name="linkedin" placeholder="https://linkedin.com/in/..." class="p-3 border-2 border-gray-100 rounded-xl bg-gray-50 outline-none w-full">
+            <div id="linkInputDiv" class="hidden">
+                <input type="url" name="linkedin" placeholder="https://linkedin.com/in/..." class="full-width-input p-4 border-2 border-gray-100 rounded-2xl outline-none">
             </div>
 
-            <div class="flex justify-between items-center pt-4">
-                <button type="button" onclick="goTo('step1')" class="text-blue-600 font-bold underline">חזור</button>
-                <button type="submit" class="bg-blue-600 text-white px-10 py-3 rounded-xl font-bold shadow-lg">שלח</button>
+            <div class="flex justify-between items-center pt-8 border-t border-gray-50">
+                <button type="button" onclick="goTo('step1')" class="text-gray-400 font-bold hover:text-gray-800 transition-colors">← חזור</button>
+                <button type="submit" class="bg-green-600 text-white px-12 py-4 rounded-2xl font-black shadow-xl shadow-green-100 hover:bg-green-700 transition-all">שלח עכשיו</button>
             </div>
         </div>
-
-        <div id="stepLow" class="step hidden space-y-5">
-            <div class="bg-orange-50 p-4 rounded-xl border-r-4 border-orange-400">
-                <p class="text-orange-900 text-sm">נראה שאין לך את דרישות המינימום, כתוב לנו למה כדאי לנו לשקול אותך בכל זאת:</p>
+        
+        <div id="stepLow" class="hidden space-y-6 text-center animate-[fadeIn_0.4s_ease-out]">
+            <div class="p-6 bg-amber-50 rounded-3xl border-r-8 border-amber-400 text-right">
+                <p class="text-amber-900 font-bold leading-relaxed">נראה שאין לך את דרישות המינימום, אך אם יש סיבה מיוחדת שנשקול אותך, נשמח לשמוע:</p>
             </div>
-            <textarea name="experienceReason" class="w-full p-4 border-2 border-gray-100 rounded-xl h-32 bg-gray-50 outline-none"></textarea>
-            <div class="flex justify-between items-center pt-4">
-                <button type="button" onclick="goTo('step1')" class="text-blue-600 font-bold underline">חזור</button>
-                <button type="submit" class="bg-gray-800 text-white px-10 py-3 rounded-xl font-bold shadow-lg">שלח בכל זאת</button>
+            <textarea name="experienceReason" placeholder="כתוב כאן..." class="full-width-input p-4 border-2 border-gray-100 rounded-2xl h-44 bg-gray-50 outline-none focus:bg-white focus:border-amber-400 transition-all"></textarea>
+            <div class="flex justify-between items-center pt-6">
+                <button type="button" onclick="goTo('step1')" class="text-gray-400 font-bold hover:text-gray-800 transition-colors">← חזור</button>
+                <button type="submit" class="bg-gray-800 text-white px-10 py-4 rounded-2xl font-black shadow-xl hover:bg-black transition-all">שלח בכל זאת</button>
             </div>
         </div>
     </form>
 </div>
 
 <script>
-    function updateHeight() {
+    function sendHeight() {
         window.parent.postMessage({ height: document.body.scrollHeight + 50 }, "*");
     }
 
     function goTo(stepId) {
         ['step1', 'step2', 'stepLow'].forEach(id => document.getElementById(id).classList.add('hidden'));
         document.getElementById(stepId).classList.remove('hidden');
-        setTimeout(updateHeight, 100);
+        setTimeout(sendHeight, 50);
     }
 
     function toggleInputs() {
         const val = document.getElementById('cvMethod').value;
         document.getElementById('fileInputDiv').classList.toggle('hidden', val !== 'file');
         document.getElementById('linkInputDiv').classList.toggle('hidden', val !== 'link');
-        setTimeout(updateHeight, 100);
+        setTimeout(sendHeight, 50);
     }
 
-    window.onload = updateHeight;
-    window.onresize = updateHeight;
+    window.onload = sendHeight;
+    window.onresize = sendHeight;
 </script>
-
 </body>
 </html>
