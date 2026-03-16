@@ -5,13 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>טופס הגשת מועמדות</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0; display: flex; justify-content: center; }
-        .form-container { width: 100%; max-width: 800px; background: #fff; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 8px; margin: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .form-container { width: 100%; max-width: 800px; background: #fff; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 12px; }
+        h2 { color: #1a73e8; text-align: center; margin-bottom: 30px; }
         .field { margin-bottom: 20px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; }
-        input[type="text"], input[type="email"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .footer-text { margin-top: 30px; padding: 15px; background: #f0f0f0; border-radius: 4px; font-size: 0.9em; color: #555; text-align: center; }
-        .btn-submit { background: #1a73e8; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1.1em; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #333; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { 
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px;
+        }
+        .radio-group { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #eee; }
+        .hidden { display: none; }
+        .sub-section { border-right: 4px solid #1a73e8; padding-right: 20px; margin: 20px 0; background: #fafafa; padding: 15px; border-radius: 0 8px 8px 0; }
+        .footer-text { margin-top: 30px; padding: 20px; background: #fff3e0; border-right: 5px solid #ff9800; border-radius: 4px; font-size: 0.95em; line-height: 1.6; }
+        .btn-submit { background: #1a73e8; color: white; padding: 15px; border: none; border-radius: 6px; cursor: pointer; width: 100%; font-size: 1.2em; font-weight: bold; transition: background 0.3s; }
+        .btn-submit:hover { background: #1557b0; }
     </style>
 </head>
 <body>
@@ -19,45 +26,157 @@
 <div class="form-container">
     <h2>טופס הגשת מועמדות</h2>
     
-    <form id="hr-form">
+    <form id="hr-form" onsubmit="return validateForm()">
         <div class="field">
             <label>שם מלא *</label>
-            <input type="text" name="name" required placeholder="התשובה שלך">
+            <input type="text" name="full_name" required>
         </div>
 
         <div class="field">
-            <label>מספר טלפון *</label>
-            <input type="text" name="phone" required placeholder="התשובה שלך">
+            <label>מספר טלפון * (9 ספרות)</label>
+            <input type="tel" name="phone" pattern="[0-9]{9}" required placeholder="למשל: 052123456">
         </div>
 
         <div class="field">
-            <label>פרטים מקצועיים *</label>
-            <input type="radio" name="cv_status" value="yes" checked> קובץ קורות חיים <br>
-            <input type="radio" name="cv_status" value="no"> אין לי קורות חיים
+            <label>דואר אלקטרוני *</label>
+            <input type="email" name="email" required>
         </div>
 
         <div class="field">
-            <label>ניסיון תעסוקתי</label>
-            <textarea name="experience" rows="4" placeholder="תאר את הניסיון שלך..."></textarea>
+            <label>הגשת מועמדות עבור משרה מספר *</label>
+            <input type="text" name="job_id" required>
         </div>
 
-        <button type="submit" class="btn-submit">שליחה</button>
+        <div class="field">
+            <label>כמה מילים על עצמך</label>
+            <textarea name="about_me" rows="3"></textarea>
+        </div>
+
+        <div class="field">
+            <label>מתי נוכל לדבר איתך</label>
+            <input type="text" name="best_time" placeholder="למשל: ימי חול בין 14:00 ל-18:00">
+        </div>
+
+        <div class="field radio-group">
+            <label>האם יש לך את הניסיון הנדרש למשרה? *</label>
+            <input type="radio" name="has_experience" value="yes" onclick="toggleExperience(true)" required> כן <br>
+            <input type="radio" name="has_experience" value="no" onclick="toggleExperience(false)"> לא
+        </div>
+
+        <div id="no-experience-block" class="sub-section hidden">
+            <p style="color: #d32f2f; font-weight: bold;">על פניו, נראה שאין לך את כל דרישות המינימום.</p>
+            <div class="field">
+                <label>אם יש לך סיבה טובה להציע, נא לרשום כאן כמה מילים:</label>
+                <textarea name="reasons_to_offer" rows="3"></textarea>
+            </div>
+            <div class="field">
+                <label>מה אתה מעדיף?</label>
+                <input type="radio" name="no_exp_choice" value="continue" onclick="toggleResumeOptions(true)"> רוצה להמשיך <br>
+                <input type="radio" name="no_exp_choice" value="finish" onclick="toggleResumeOptions(false)"> רוצה לסיים
+            </div>
+        </div>
+
+        <div id="resume-options-block" class="sub-section hidden">
+            <label>איך תרצה להציג את הניסיון שלך?</label>
+            <select name="resume_method" id="resume_method" onchange="toggleResumeFields()">
+                <option value="">בחר אפשרות...</option>
+                <option value="file">קובץ קורות חיים</option>
+                <option value="linkedin">פרופיל לינקדאין</option>
+                <option value="manual">אין לי קורות חיים - מילוי ידני</option>
+            </select>
+
+            <div id="field-file" class="field hidden" style="margin-top:15px;">
+                <label>צרף קובץ</label>
+                <input type="file" name="cv_file">
+            </div>
+
+            <div id="field-linkedin" class="field hidden" style="margin-top:15px;">
+                <label>כתובת פרופיל לינקדאין</label>
+                <input type="text" name="linkedin_url" placeholder="https://linkedin.com/in/yourprofile">
+            </div>
+
+            <div id="field-manual" class="hidden">
+                <div class="field">
+                    <label>איזור עבודה מבוקש (למשל: ירושלים, תל אביב, אזור הצפון)</label>
+                    <input type="text" name="work_area">
+                </div>
+                <div class="field">
+                    <label>השכלה (מוסד השכלה אחרון)</label>
+                    <input type="text" name="education_inst">
+                </div>
+                <div class="field">
+                    <label>שנת סיום השכלה</label>
+                    <input type="date" name="education_end">
+                </div>
+                <div class="field">
+                    <label>שם החברה ותיאור התפקיד האחרון</label>
+                    <input type="text" name="last_job_desc">
+                </div>
+                <div class="field">
+                    <label>שנת התחלה</label>
+                    <input type="date" name="job_start">
+                </div>
+                <div class="field">
+                    <label>שנת סיום</label>
+                    <input type="date" name="job_end">
+                </div>
+                <div class="field">
+                    <label>שירות צבאי/לאומי (תפקיד ושנת סיום)</label>
+                    <input type="text" name="service_details">
+                </div>
+            </div>
+        </div>
 
         <div class="footer-text">
-            <strong>הגשת מועמדות אתה מסכים להעברת הנתונים שלך למעביד.</strong><br>
-            לתשומת לבך: הנתונים אינם נשמרים בשרת לאחר השליחה.
+            הגשת מועמדות אתה מסכים להעברת הנתונים שלך למעביד. <br>
+            <strong>לתשומת לבך:</strong> הנתונים אינם נשמרים בשרת האתר לאחר השליחה.
         </div>
+
+        <button type="submit" class="btn-submit" style="margin-top:20px;">שליחת המועמדות</button>
     </form>
 </div>
 
 <script>
-    // Скрипт для передачи высоты в Osclass
-    function sendHeight() {
-        const height = document.body.scrollHeight;
-        window.parent.postMessage({ height: height }, "*");
+    function toggleExperience(show) {
+        const noBlock = document.getElementById('no-experience-block');
+        const resBlock = document.getElementById('resume-options-block');
+        if (show) {
+            noBlock.classList.add('hidden');
+            resBlock.classList.remove('hidden');
+        } else {
+            noBlock.classList.remove('hidden');
+            resBlock.classList.add('hidden');
+        }
+        sendHeight();
     }
+
+    function toggleResumeOptions(show) {
+        const resBlock = document.getElementById('resume-options-block');
+        show ? resBlock.classList.remove('hidden') : resBlock.classList.add('hidden');
+        sendHeight();
+    }
+
+    function toggleResumeFields() {
+        const method = document.getElementById('resume_method').value;
+        document.getElementById('field-file').classList.toggle('hidden', method !== 'file');
+        document.getElementById('field-linkedin').classList.toggle('hidden', method !== 'linkedin');
+        document.getElementById('field-manual').classList.toggle('hidden', method !== 'manual');
+        sendHeight();
+    }
+
+    function sendHeight() {
+        setTimeout(() => {
+            window.parent.postMessage({ height: document.body.scrollHeight }, "*");
+        }, 100);
+    }
+
+    function validateForm() {
+        // Здесь можно добавить AJAX-отправку (например, через EmailJS или Formspree)
+        alert("הטופס נשלח בהצלחה!");
+        return true;
+    }
+
     window.onload = sendHeight;
-    window.onresize = sendHeight;
 </script>
 
 </body>
