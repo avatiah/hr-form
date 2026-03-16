@@ -36,7 +36,7 @@
 
         <div class="field">
             <label>מספר טלפון (9 ספרות) <span class="required-star">*</span></label>
-            <input type="tel" name="phone" pattern="[0-9]{9,10}" required placeholder="למשл: 0521234567">
+            <input type="tel" name="phone" pattern="[0-9]{9,10}" required placeholder="למשל: 0521234567">
         </div>
 
         <div class="field">
@@ -60,7 +60,7 @@
         </div>
 
         <div class="field radio-group">
-            <label>האם יש לך את הניסיון הנדрש למשרה? <span class="required-star">*</span></label>
+            <label>האם יש לך את הניסיון הנדרש למשרה? <span class="required-star">*</span></label>
             <label style="font-weight:normal;"><input type="radio" name="has_experience" value="yes" onclick="toggleExperience(true)" required> כן</label>
             <label style="font-weight:normal;"><input type="radio" name="has_experience" value="no" onclick="toggleExperience(false)"> לא</label>
         </div>
@@ -115,7 +115,7 @@
                     <input type="date" name="education_end" class="manual-req">
                 </div>
                 <div class="field">
-                    <label>שם החברה ותיאור התפקיד <span class="required-star">*</span></label>
+                    <label>שם החברה ותיאור התפקיд <span class="required-star">*</span></label>
                     <input type="text" name="last_company" class="manual-req">
                 </div>
                 <div class="field">
@@ -210,7 +210,12 @@
     }
 
     function toggleResumeOptions(shouldContinue) {
-        document.getElementById('resume-options-block').classList.toggle('hidden', !shouldContinue);
+        const resBlock = document.getElementById('resume-options-block');
+        if (shouldContinue) {
+            resBlock.classList.remove('hidden');
+        } else {
+            resBlock.classList.add('hidden');
+        }
         sendHeight();
     }
 
