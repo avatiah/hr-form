@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>טופס הגשת מועמדות</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; display: flex; justify-content: center; overflow-x: hidden; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; display: flex; justify-content: center; }
         .form-container { width: 100%; max-width: 800px; background: #fff; padding: 25px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); border-radius: 12px; }
         h2 { color: #1a73e8; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #eef0f2; padding-bottom: 15px; }
         .field { margin-bottom: 18px; }
         label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; }
-        .hint { font-size: 0.85em; color: #666; font-weight: normal; margin-bottom: 4px; display: block; }
         input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { 
             width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; box-sizing: border-box; font-size: 16px; outline: none; transition: border-color 0.2s;
         }
@@ -37,7 +36,7 @@
 
         <div class="field">
             <label>מספר טלפון (9 ספרות) <span class="required-star">*</span></label>
-            <input type="tel" name="phone" pattern="[0-9]{9,10}" required placeholder="למשל: 0521234567">
+            <input type="tel" name="phone" pattern="[0-9]{9,10}" required placeholder="למשл: 0521234567">
         </div>
 
         <div class="field">
@@ -55,8 +54,13 @@
             <textarea name="about_me" rows="3" required></textarea>
         </div>
 
+        <div class="field">
+            <label>מתי נוכל לדבר איתך <span class="required-star">*</span></label>
+            <input type="text" name="best_time" required>
+        </div>
+
         <div class="field radio-group">
-            <label>האם יש לך את הניסיון הנדרש למשרה? <span class="required-star">*</span></label>
+            <label>האם יש לך את הניסיון הנדрש למשרה? <span class="required-star">*</span></label>
             <label style="font-weight:normal;"><input type="radio" name="has_experience" value="yes" onclick="toggleExperience(true)" required> כן</label>
             <label style="font-weight:normal;"><input type="radio" name="has_experience" value="no" onclick="toggleExperience(false)"> לא</label>
         </div>
@@ -69,8 +73,8 @@
             </div>
             <div class="field">
                 <label>מה אתה מעדיף? <span class="required-star">*</span></label>
-                <label style="font-weight:normal;"><input type="radio" name="no_exp_choice" value="continue" onclick="toggleResumeOptions(true)"> רוצה להמשיך</label> <br>
-                <label style="font-weight:normal;"><input type="radio" name="no_exp_choice" value="finish" onclick="toggleResumeOptions(false)"> רוצה לסיים</label>
+                <label style="font-weight:normal;"><input type="radio" name="no_exp_choice" id="choice_continue" value="continue" onclick="toggleResumeOptions(true)"> רוצה להמשיך</label> <br>
+                <label style="font-weight:normal;"><input type="radio" name="no_exp_choice" id="choice_finish" value="finish" onclick="toggleResumeOptions(false)"> רוצה לסיים</label>
             </div>
         </div>
 
@@ -80,7 +84,7 @@
                 <option value="">בחר אפשרות...</option>
                 <option value="file">קובץ קורות חיים</option>
                 <option value="linkedin">פרופיל לינקדאין</option>
-                <option value="manual">מילוי ידני</option>
+                <option value="manual">אין לי קורות חיים - מילוי ידני</option>
             </select>
 
             <div id="field-file" class="field hidden" style="margin-top:15px;">
@@ -99,14 +103,43 @@
                     <input type="text" name="work_area" class="manual-req">
                 </div>
                 <div class="field">
-                    <label>שם החברה ותיאור התפקיд <span class="required-star">*</span></label>
+                    <label>השכלה <span class="required-star">*</span></label>
+                    <input type="text" name="education_inst" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>מוסד <span class="required-star">*</span></label>
+                    <input type="text" name="education_name" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>שנת סיום השכלה <span class="required-star">*</span></label>
+                    <input type="date" name="education_end" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>שם החברה ותיאור התפקיד <span class="required-star">*</span></label>
                     <input type="text" name="last_company" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>תפקיד <span class="required-star">*</span></label>
+                    <input type="text" name="job_title" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>שנת התחלה <span class="required-star">*</span></label>
+                    <input type="date" name="job_start" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>שנת סיום <span class="required-star">*</span></label>
+                    <input type="date" name="job_end" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>שירות צבאי/לאומי (תפקיד ושנת סיום)</label>
+                    <input type="text" name="service_details">
                 </div>
             </div>
         </div>
 
         <div class="footer-text">
-            בעת הגשת המועמדות אתה מסכים להעברת הנתונים שלך למעביד באתר isradata.com.
+            בעת הגשת המועמדות אתה מסכים להעברת הנתונים שלך למעביד. <br>
+            <strong>לתשומת לבך:</strong> הנתונים אינם נשמרים בשרת האתר isradata.com לאחר השליחה.
         </div>
 
         <button type="submit" class="btn-submit" id="submit-btn">שליחת המועמדות</button>
@@ -141,7 +174,7 @@
                 form.reset();
                 location.reload(); 
             } catch (error) {
-                console.error('Submission error:', error);
+                console.error('Error:', error);
                 alert("אירעה שגיאה בשליחה ל-isradata.com.");
             } finally {
                 btn.disabled = false;
@@ -164,21 +197,28 @@
     });
 
     function toggleExperience(hasExp) {
-        document.getElementById('no-experience-block').classList.toggle('hidden', hasExp);
-        document.getElementById('resume-options-block').classList.toggle('hidden', !hasExp);
+        const noBlock = document.getElementById('no-experience-block');
+        const resBlock = document.getElementById('resume-options-block');
+        if (hasExp) {
+            noBlock.classList.add('hidden');
+            resBlock.classList.remove('hidden');
+        } else {
+            noBlock.classList.remove('hidden');
+            resBlock.classList.add('hidden');
+        }
         sendHeight();
     }
 
-    function toggleResumeOptions(cont) {
-        document.getElementById('resume-options-block').classList.toggle('hidden', !cont);
+    function toggleResumeOptions(shouldContinue) {
+        document.getElementById('resume-options-block').classList.toggle('hidden', !shouldContinue);
         sendHeight();
     }
 
     function toggleResumeFields() {
-        const val = document.getElementById('resume_method').value;
-        document.getElementById('field-file').classList.toggle('hidden', val !== 'file');
-        document.getElementById('field-linkedin').classList.toggle('hidden', val !== 'linkedin');
-        document.getElementById('field-manual').classList.toggle('hidden', val !== 'manual');
+        const method = document.getElementById('resume_method').value;
+        document.getElementById('field-file').classList.toggle('hidden', method !== 'file');
+        document.getElementById('field-linkedin').classList.toggle('hidden', method !== 'linkedin');
+        document.getElementById('field-manual').classList.toggle('hidden', method !== 'manual');
         sendHeight();
     }
 
