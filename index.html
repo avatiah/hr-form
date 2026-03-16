@@ -1,60 +1,288 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycbz63uL-LUUGdu0M67uH9n-naBeE11khTwbteGi6WlJ04UEEGtx7fc8PVX3UtlaC9usj/exec';
-const form = document.getElementById('hr-form');
-const btn = document.getElementById('submit-btn');
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>טופס הגשת מועמדות</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; display: flex; justify-content: center; }
+        .form-container { width: 100%; max-width: 800px; background: #fff; padding: 25px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); border-radius: 12px; }
+        h2 { color: #1a73e8; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #eef0f2; padding-bottom: 15px; }
+        .field { margin-bottom: 18px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; }
+        .hint { font-size: 0.85em; color: #666; font-weight: normal; margin-bottom: 4px; display: block; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { 
+            width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; box-sizing: border-box; font-size: 16px; outline: none; transition: border-color 0.2s;
+        }
+        input:focus { border-color: #1a73e8; }
+        .radio-group { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; }
+        .hidden { display: none; }
+        .sub-section { border-right: 4px solid #1a73e8; padding: 15px 20px 15px 15px; margin: 20px 0; background: #fafafa; border-radius: 4px; }
+        .footer-text { margin-top: 25px; padding: 15px; background: #fff3e0; border-right: 5px solid #ff9800; border-radius: 4px; font-size: 0.9em; line-height: 1.5; }
+        .btn-submit { background: #1a73e8; color: white; padding: 16px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 1.1em; font-weight: bold; margin-top: 20px; }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+        .required-star { color: #d32f2f; margin-right: 4px; }
+    </style>
+</head>
+<body>
 
-form.addEventListener('submit', async e => {
-    e.preventDefault();
-    btn.disabled = true;
-    btn.innerText = 'שולח... (שולח קובץ, אנא המתן)'; // Сообщаем, что идет загрузка файла
-
-    const formData = new FormData(form);
-    const dataObj = {};
+<div class="form-container">
+    <h2>טופס הגשת מועמדות</h2>
     
-    // Собираем все текстовые поля
-    formData.forEach((value, key) => {
-        if (key !== 'cv_file') {
-            dataObj[key] = value;
+    <form id="hr-form">
+        <div class="field">
+            <label>שם מלא <span class="required-star">*</span></label>
+            <input type="text" name="full_name" required>
+        </div>
+
+        <div class="field">
+            <label>מספר טלפון (9 ספרות) <span class="required-star">*</span></label>
+            <input type="tel" name="phone" pattern="[0-9]{9,10}" required placeholder="למשל: 0521234567">
+        </div>
+
+        <div class="field">
+            <label>דואר אלקטרוני <span class="required-star">*</span></label>
+            <input type="email" name="email" required>
+        </div>
+
+        <div class="field">
+            <label>הגשת מועמדות עבור משרה מספר <span class="required-star">*</span></label>
+            <input type="text" name="job_id" required>
+        </div>
+
+        <div class="field">
+            <label>כמה מילים על עצמך <span class="required-star">*</span></label>
+            <textarea name="about_me" rows="3" required></textarea>
+        </div>
+
+        <div class="field">
+            <label>מתי נוכל לדבר איתך <span class="required-star">*</span></label>
+            <input type="text" name="best_time" required>
+        </div>
+
+        <div class="field radio-group">
+            <label>האם יש לך את הניסיון הנדרש למשרה? <span class="required-star">*</span></label>
+            <label style="font-weight:normal;"><input type="radio" name="has_experience" value="yes" onclick="toggleExperience(true)" required> כן</label>
+            <label style="font-weight:normal;"><input type="radio" name="has_experience" value="no" onclick="toggleExperience(false)"> לא</label>
+        </div>
+
+        <div id="no-experience-block" class="sub-section hidden">
+            <p style="color: #d32f2f; font-weight: bold; margin-top:0;">על פניו, נראה שאין לך את כל דרישות המינימום.</p>
+            <div class="field">
+                <label>אך אל חשש, אם יש לך סיבה טובה להציע, נא לרשום כאן כמה מילים <span class="required-star">*</span></label>
+                <textarea name="reasons_to_offer" id="reasons_to_offer" rows="3"></textarea>
+            </div>
+            <div class="field">
+                <label>מה אתה מעדיף? <span class="required-star">*</span></label>
+                <label style="font-weight:normal;"><input type="radio" name="no_exp_choice" id="choice_continue" value="continue" onclick="toggleResumeOptions(true)"> רוצה להמשיך</label> <br>
+                <label style="font-weight:normal;"><input type="radio" name="no_exp_choice" id="choice_finish" value="finish" onclick="toggleResumeOptions(false)"> רוצה לסיים</label>
+            </div>
+        </div>
+
+        <div id="resume-options-block" class="sub-section hidden">
+            <label>איך תרצה להציג את הניסיון שלך? <span class="required-star">*</span></label>
+            <select name="resume_method" id="resume_method" onchange="toggleResumeFields()">
+                <option value="">בחר אפשרות...</option>
+                <option value="file">קובץ קורות חיים</option>
+                <option value="linkedin">פרופיל לינקדאין</option>
+                <option value="manual">אין לי קורות חיים - מילוי ידני</option>
+            </select>
+
+            <div id="field-file" class="field hidden" style="margin-top:15px;">
+                <label>צרף קובץ קורות חיים <span class="required-star">*</span></label>
+                <input type="file" name="cv_file" id="cv_file_input">
+            </div>
+
+            <div id="field-linkedin" class="field hidden" style="margin-top:15px;">
+                <label>כתובת פרופיל לינקדאין <span class="required-star">*</span></label>
+                <input type="text" name="linkedin_url" id="linkedin_input" placeholder="https://linkedin.com/in/...">
+            </div>
+
+            <div id="field-manual" class="hidden">
+                <div class="field">
+                    <label>איזור עבודה מבוקש <span class="required-star">*</span></label>
+                    <input type="text" name="work_area" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>השכלה <span class="required-star">*</span></label>
+                    <input type="text" name="education_inst" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>מוסד <span class="required-star">*</span></label>
+                    <input type="text" name="education_name" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>שנת סיום השכלה <span class="required-star">*</span></label>
+                    <input type="date" name="education_end" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>שם החברה ותיאור התפקיד <span class="required-star">*</span></label>
+                    <input type="text" name="last_company" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>תפקיד <span class="required-star">*</span></label>
+                    <input type="text" name="job_title" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>שנת התחלה <span class="required-star">*</span></label>
+                    <input type="date" name="job_start" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>שנת סיום <span class="required-star">*</span></label>
+                    <input type="date" name="job_end" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>שירות צבאי/לאומי (תפקיד ושנת סיום)</label>
+                    <input type="text" name="service_details">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-text">
+            בעת הגשת המועמדות אתה מסכים להעברת הנתונים שלך למעביד. <br>
+            <strong>לתשומת לבך:</strong> הנתונים אינם נשמרים בשרת האתר לאחר השליחה.
+        </div>
+
+        <button type="submit" class="btn-submit" id="submit-btn">שליחת המועמדות</button>
+    </form>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbz63uL-LUUGdu0M67uH9n-naBeE11khTwbteGi6WlJ04UEEGtx7fc8PVX3UtlaC9usj/exec';
+    const form = document.getElementById('hr-form');
+    const btn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.innerText = 'שולח... אנא המתן';
+
+        const formData = new FormData(form);
+        const dataObj = {};
+        
+        formData.forEach((value, key) => {
+            if (key !== 'cv_file') dataObj[key] = value;
+        });
+
+        const fileInput = document.getElementById('cv_file_input');
+        
+        const sendToServer = async (payload) => {
+            try {
+                // Используем fetch с mode: 'cors' и специальным заголовком
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+                
+                if (result.result === 'success') {
+                    alert("הטופס נשלח בהצלחה!");
+                    form.reset();
+                    resetView();
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Submission Error:', error);
+                // Если данные все же попали в таблицу несмотря на ошибку CORS (часто бывает с Google)
+                alert("הטופס נשלח (או שגיאת שרת). אנא בדוק אם הנתונים הגיעו.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'שליחת המועמדות';
+            }
+        };
+
+        if (fileInput && fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = async function() {
+                dataObj['fileData'] = reader.result;
+                dataObj['fileName'] = file.name;
+                await sendToServer(dataObj);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            await sendToServer(dataObj);
         }
     });
 
-    const fileInput = document.getElementById('cv_file_input');
-    
-    // Функция для отправки данных
-    const sendToServer = async (payload) => {
-        try {
-            const response = await fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors', // Важно для Google Script
-                body: JSON.stringify(payload)
-            });
-            
-            // Так как mode: 'no-cors', мы не получим ответ JSON, 
-            // но если ошибок нет, значит данные ушли
-            alert("הטופס נשלח בהצלחה!");
-            form.reset();
-            // Скрываем блоки
-            document.getElementById('no-experience-block').classList.add('hidden');
-            document.getElementById('resume-options-block').classList.add('hidden');
-        } catch (error) {
-            console.error('Error!', error);
-            alert("אירעה שגיאה. בדוק את החיבור לאינטרנט.");
-        } finally {
-            btn.disabled = false;
-            btn.innerText = 'שליחת המועמדות';
-        }
-    };
-
-    // Если есть файл - читаем его, если нет - отправляем сразу
-    if (fileInput && fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-        reader.onload = async function() {
-            dataObj['fileData'] = reader.result;
-            dataObj['fileName'] = file.name;
-            await sendToServer(dataObj);
-        };
-        reader.readAsDataURL(file);
-    } else {
-        await sendToServer(dataObj);
+    function resetView() {
+        document.getElementById('no-experience-block').classList.add('hidden');
+        document.getElementById('resume-options-block').classList.add('hidden');
+        sendHeight();
     }
-});
+
+    function updateRequired(elements, isRequired) {
+        elements.forEach(el => {
+            if (isRequired) el.setAttribute('required', '');
+            else el.removeAttribute('required');
+        });
+    }
+
+    function toggleExperience(hasExp) {
+        const noBlock = document.getElementById('no-experience-block');
+        const resBlock = document.getElementById('resume-options-block');
+        const reasonInput = document.getElementById('reasons_to_offer');
+        const choiceInputs = [document.getElementById('choice_continue'), document.getElementById('choice_finish')];
+
+        if (hasExp) {
+            noBlock.classList.add('hidden');
+            resBlock.classList.remove('hidden');
+            updateRequired([reasonInput, ...choiceInputs], false);
+            updateRequired([document.getElementById('resume_method')], true);
+        } else {
+            noBlock.classList.remove('hidden');
+            resBlock.classList.add('hidden');
+            updateRequired([reasonInput, ...choiceInputs], true);
+            updateRequired([document.getElementById('resume_method')], false);
+        }
+        sendHeight();
+    }
+
+    function toggleResumeOptions(shouldContinue) {
+        const resBlock = document.getElementById('resume-options-block');
+        if (shouldContinue) {
+            resBlock.classList.remove('hidden');
+            updateRequired([document.getElementById('resume_method')], true);
+        } else {
+            resBlock.classList.add('hidden');
+            updateRequired([document.getElementById('resume_method')], false);
+        }
+        sendHeight();
+    }
+
+    function toggleResumeFields() {
+        const method = document.getElementById('resume_method').value;
+        const fileInp = document.getElementById('cv_file_input');
+        const linkInp = document.getElementById('linkedin_input');
+        const manualInps = document.querySelectorAll('.manual-req');
+
+        document.getElementById('field-file').classList.toggle('hidden', method !== 'file');
+        document.getElementById('field-linkedin').classList.toggle('hidden', method !== 'linkedin');
+        document.getElementById('field-manual').classList.toggle('hidden', method !== 'manual');
+
+        updateRequired([fileInp], method === 'file');
+        updateRequired([linkInp], method === 'linkedin');
+        updateRequired(manualInps, method === 'manual');
+
+        sendHeight();
+    }
+
+    function sendHeight() {
+        setTimeout(() => {
+            if (window.parent) {
+                window.parent.postMessage({ height: document.body.scrollHeight }, "*");
+            }
+        }, 250);
+    }
+
+    window.onload = sendHeight;
+</script>
+
+</body>
+</html>
