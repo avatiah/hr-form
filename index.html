@@ -35,7 +35,7 @@
 
         <div class="field">
             <label>מספר טלפון (9 ספרות) <span class="required-star">*</span></label>
-            <input type="tel" name="phone" pattern="[0-9]{9,10}" required placeholder="למשל: 0521234567">
+            <input type="tel" name="phone" pattern="[0-9]{9,10}" required placeholder="למשл: 0521234567">
         </div>
 
         <div class="field">
@@ -59,13 +59,13 @@
         </div>
 
         <div class="field radio-group">
-            <label>האם יש לך את הניסיון הנדрש למשרה? <span class="required-star">*</span></label>
+            <label>האם יש לך את הניסיון הנדרש למשרה? <span class="required-star">*</span></label>
             <label style="font-weight:normal;"><input type="radio" name="has_experience" value="yes" onclick="toggleExperience(true)" required> כן</label>
             <label style="font-weight:normal;"><input type="radio" name="has_experience" value="no" onclick="toggleExperience(false)"> לא</label>
         </div>
 
         <div id="no-experience-block" class="sub-section hidden">
-            <p style="color: #d32f2f; font-weight: bold; margin-top:0;">על פניו, נראה שאין לך את כל דרישות המינימום.</p>
+            <p style="color: #d32f2f; font-weight: bold; margin-top:0;">על פניו, נראה שאין לך את כל דриשות המינימום.</p>
             <div class="field">
                 <label>אם יש לך סיבה טובה להציע, נא לרשום כאן כמה מילים <span class="required-star">*</span></label>
                 <textarea name="reasons_to_offer" id="reasons_to_offer" rows="3"></textarea>
@@ -78,7 +78,7 @@
         </div>
 
         <div id="resume-options-block" class="sub-section hidden">
-            <label>איך תרצה להציג את הניסיון שלך? <span class="required-star">*</span></label>
+            <label>איך תрצה להציג את הניסיון שלך? <span class="required-star">*</span></label>
             <select name="resume_method" id="resume_method" onchange="toggleResumeFields()">
                 <option value="">בחר אפשרות...</option>
                 <option value="file">קובץ קורות חיים</option>
@@ -92,8 +92,8 @@
             </div>
 
             <div id="field-linkedin" class="field hidden" style="margin-top:15px;">
-                <label>כתובת פרופיל לינקдאין <span class="required-star">*</span></label>
-                <input type="text" name="linkedin_url" id="linkedin_input" placeholder="https://linkedin.com/in/...">
+                <label>כתובת פרופיל לינקדאין <span class="required-star">*</span></label>
+                <input type="text" name="linkedin_url" id="linkedin_input">
             </div>
 
             <div id="field-manual" class="hidden">
@@ -103,7 +103,7 @@
                 <div class="field"><label>שם החברה ותיאור התפקיד האחרון <span class="required-star">*</span></label><input type="text" name="last_job_desc" class="manual-req"></div>
                 <div class="field"><label>שנת התחלה <span class="required-star">*</span></label><input type="date" name="job_start" class="manual-req"></div>
                 <div class="field"><label>שנת סיום <span class="required-star">*</span></label><input type="date" name="job_end" class="manual-req"></div>
-                <div class="field"><label>שירות צבאי/לאומי (תפקיד ושנת סיום) <span class="required-star">*</span></label><input type="text" name="service_details" class="manual-req"></div>
+                <div class="field"><label>שירות צבאי/לאומי (תפקיד ושנת סיום)</label><input type="text" name="service_details"></div>
             </div>
         </div>
 
@@ -176,7 +176,7 @@
     function sendHeight() {
         setTimeout(() => {
             window.parent.postMessage({ height: document.body.scrollHeight }, "*");
-        }, 150);
+        }, 200);
     }
 
     window.onload = sendHeight;
