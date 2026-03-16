@@ -10,13 +10,15 @@
         h2 { color: #1a73e8; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #eef0f2; padding-bottom: 15px; }
         .field { margin-bottom: 18px; }
         label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; }
-        input[type="text"], input[type="email"], input[type="tel"], textarea, select { 
+        .hint { font-size: 0.85em; color: #666; font-weight: normal; margin-bottom: 4px; display: block; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { 
             width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; box-sizing: border-box; font-size: 16px; outline: none; transition: border-color 0.2s;
         }
         input:focus { border-color: #1a73e8; }
         .radio-group { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; }
         .hidden { display: none; }
         .sub-section { border-right: 4px solid #1a73e8; padding: 15px 20px 15px 15px; margin: 20px 0; background: #fafafa; border-radius: 4px; }
+        .footer-text { margin-top: 25px; padding: 15px; background: #fff3e0; border-right: 5px solid #ff9800; border-radius: 4px; font-size: 0.9em; line-height: 1.5; }
         .btn-submit { background: #1a73e8; color: white; padding: 16px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 1.1em; font-weight: bold; margin-top: 20px; }
         .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
         .required-star { color: #d32f2f; margin-right: 4px; }
@@ -34,8 +36,8 @@
         </div>
 
         <div class="field">
-            <label>מספר טלפון <span class="required-star">*</span></label>
-            <input type="tel" name="phone" pattern="[0-9]{9,10}" required>
+            <label>מספר טלפון (9 ספרות) <span class="required-star">*</span></label>
+            <input type="tel" name="phone" pattern="[0-9]{9,10}" required placeholder="למשל: 0521234567">
         </div>
 
         <div class="field">
@@ -44,31 +46,68 @@
         </div>
 
         <div class="field">
-            <label>משרה מספר <span class="required-star">*</span></label>
+            <label>הגשת מועמדות עבור משרה מספר <span class="required-star">*</span></label>
             <input type="text" name="job_id" required>
+        </div>
+
+        <div class="field">
+            <label>כמה מילים על עצמך <span class="required-star">*</span></label>
+            <textarea name="about_me" rows="3" required></textarea>
         </div>
 
         <div class="field radio-group">
             <label>האם יש לך את הניסיון הנדרש למשרה? <span class="required-star">*</span></label>
-            <label><input type="radio" name="has_experience" value="yes" onclick="toggleExperience(true)" required> כן</label>
-            <label><input type="radio" name="has_experience" value="no" onclick="toggleExperience(false)"> לא</label>
+            <label style="font-weight:normal;"><input type="radio" name="has_experience" value="yes" onclick="toggleExperience(true)" required> כן</label>
+            <label style="font-weight:normal;"><input type="radio" name="has_experience" value="no" onclick="toggleExperience(false)"> לא</label>
+        </div>
+
+        <div id="no-experience-block" class="sub-section hidden">
+            <p style="color: #d32f2f; font-weight: bold; margin-top:0;">על פניו, נראה שאין לך את כל דרישות המינימום.</p>
+            <div class="field">
+                <label>אך אל חשש, אם יש לך סיבה טובה להציע, נא לרשום כאן כמה מילים <span class="required-star">*</span></label>
+                <textarea name="reasons_to_offer" id="reasons_to_offer" rows="3"></textarea>
+            </div>
+            <div class="field">
+                <label>מה אתה מעדיף? <span class="required-star">*</span></label>
+                <label style="font-weight:normal;"><input type="radio" name="no_exp_choice" value="continue" onclick="toggleResumeOptions(true)"> רוצה להמשיך</label> <br>
+                <label style="font-weight:normal;"><input type="radio" name="no_exp_choice" value="finish" onclick="toggleResumeOptions(false)"> רוצה לסיים</label>
+            </div>
         </div>
 
         <div id="resume-options-block" class="sub-section hidden">
-            <label>איך תרצה להגיש קורות חיים? <span class="required-star">*</span></label>
+            <label>איך תרצה להציג את הניסיון שלך? <span class="required-star">*</span></label>
             <select name="resume_method" id="resume_method" onchange="toggleResumeFields()">
-                <option value="">בחר...</option>
-                <option value="file">קובץ</option>
-                <option value="linkedin">לינקדאין</option>
-                <option value="manual">ידני</option>
+                <option value="">בחר אפשרות...</option>
+                <option value="file">קובץ קורות חיים</option>
+                <option value="linkedin">פרופיל לינקדאין</option>
+                <option value="manual">מילוי ידני</option>
             </select>
 
-            <div id="field-file" class="field hidden">
-                <label>צרף קובץ <span class="required-star">*</span></label>
+            <div id="field-file" class="field hidden" style="margin-top:15px;">
+                <label>צרף קובץ קורות חיים <span class="required-star">*</span></label>
                 <input type="file" name="cv_file" id="cv_file_input">
             </div>
-            
+
+            <div id="field-linkedin" class="field hidden" style="margin-top:15px;">
+                <label>כתובת פרופיל לינקדאין <span class="required-star">*</span></label>
+                <input type="text" name="linkedin_url" id="linkedin_input" placeholder="https://linkedin.com/in/...">
             </div>
+
+            <div id="field-manual" class="hidden">
+                <div class="field">
+                    <label>איזור עבודה מבוקש <span class="required-star">*</span></label>
+                    <input type="text" name="work_area" class="manual-req">
+                </div>
+                <div class="field">
+                    <label>שם החברה ותיאור התפקיд <span class="required-star">*</span></label>
+                    <input type="text" name="last_company" class="manual-req">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-text">
+            בעת הגשת המועמדות אתה מסכים להעברת הנתונים שלך למעביד באתר isradata.com.
+        </div>
 
         <button type="submit" class="btn-submit" id="submit-btn">שליחת המועמדות</button>
     </form>
@@ -98,12 +137,12 @@
                     headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify(payload)
                 });
-                alert("הטופס נשלח בהצלחה!");
+                alert("הנתונים התקבלו בהצלחה במערכת isradata.com!");
                 form.reset();
                 location.reload(); 
             } catch (error) {
                 console.error('Submission error:', error);
-                alert("שגיאה בשליחה.");
+                alert("אירעה שגיאה בשליחה ל-isradata.com.");
             } finally {
                 btn.disabled = false;
                 btn.innerText = 'שליחת המועמדות';
@@ -125,20 +164,28 @@
     });
 
     function toggleExperience(hasExp) {
+        document.getElementById('no-experience-block').classList.toggle('hidden', hasExp);
         document.getElementById('resume-options-block').classList.toggle('hidden', !hasExp);
-        updateHeight();
+        sendHeight();
+    }
+
+    function toggleResumeOptions(cont) {
+        document.getElementById('resume-options-block').classList.toggle('hidden', !cont);
+        sendHeight();
     }
 
     function toggleResumeFields() {
         const val = document.getElementById('resume_method').value;
         document.getElementById('field-file').classList.toggle('hidden', val !== 'file');
-        updateHeight();
+        document.getElementById('field-linkedin').classList.toggle('hidden', val !== 'linkedin');
+        document.getElementById('field-manual').classList.toggle('hidden', val !== 'manual');
+        sendHeight();
     }
 
-    function updateHeight() {
+    function sendHeight() {
         if (window.parent) window.parent.postMessage({ height: document.body.scrollHeight }, "*");
     }
-    window.onload = updateHeight;
+    window.onload = sendHeight;
 </script>
 </body>
 </html>
