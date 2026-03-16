@@ -10,7 +10,7 @@
         h2 { color: #1a73e8; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #eef0f2; padding-bottom: 15px; }
         .field { margin-bottom: 18px; }
         label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { 
+        input[type="text"], input[type="email"], input[type="tel"], textarea, select { 
             width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; box-sizing: border-box; font-size: 16px; outline: none; transition: border-color 0.2s;
         }
         input:focus { border-color: #1a73e8; }
@@ -34,7 +34,7 @@
         </div>
 
         <div class="field">
-            <label>מספר טלфон <span class="required-star">*</span></label>
+            <label>מספר טלפון <span class="required-star">*</span></label>
             <input type="tel" name="phone" pattern="[0-9]{9,10}" required>
         </div>
 
@@ -48,27 +48,10 @@
             <input type="text" name="job_id" required>
         </div>
 
-        <div class="field">
-            <label>כמה מילים על עצמך <span class="required-star">*</span></label>
-            <textarea name="about_me" rows="3" required></textarea>
-        </div>
-
         <div class="field radio-group">
             <label>האם יש לך את הניסיון הנדרש למשרה? <span class="required-star">*</span></label>
             <label><input type="radio" name="has_experience" value="yes" onclick="toggleExperience(true)" required> כן</label>
             <label><input type="radio" name="has_experience" value="no" onclick="toggleExperience(false)"> לא</label>
-        </div>
-
-        <div id="no-experience-block" class="sub-section hidden">
-            <div class="field">
-                <label>מדוע כדאי לנו לשקול את מועמדותך? <span class="required-star">*</span></label>
-                <textarea name="reasons_to_offer" id="reasons_to_offer" rows="2"></textarea>
-            </div>
-            <div class="field">
-                <label>האם תרצה להמשיך? <span class="required-star">*</span></label>
-                <label><input type="radio" name="no_exp_choice" value="continue" onclick="toggleResumeOptions(true)"> כן</label>
-                <label><input type="radio" name="no_exp_choice" value="finish" onclick="toggleResumeOptions(false)"> לא</label>
-            </div>
         </div>
 
         <div id="resume-options-block" class="sub-section hidden">
@@ -84,17 +67,8 @@
                 <label>צרף קובץ <span class="required-star">*</span></label>
                 <input type="file" name="cv_file" id="cv_file_input">
             </div>
-
-            <div id="field-linkedin" class="field hidden">
-                <label>קישור ללינקדאין <span class="required-star">*</span></label>
-                <input type="text" name="linkedin_url" id="linkedin_input">
+            
             </div>
-
-            <div id="field-manual" class="hidden">
-                <div class="field"><label>איזור עבודה <span class="required-star">*</span></label><input type="text" name="work_area" class="manual-req"></div>
-                <div class="field"><label>חברה אחרונה <span class="required-star">*</span></label><input type="text" name="last_company" class="manual-req"></div>
-            </div>
-        </div>
 
         <button type="submit" class="btn-submit" id="submit-btn">שליחת המועמדות</button>
     </form>
@@ -116,20 +90,19 @@
 
         const fileInput = document.getElementById('cv_file_input');
         
-        const sendData = async (payload) => {
+        const sendToDatabase = async (payload) => {
             try {
-                // Используем mode: 'no-cors' для обхода проблем с Google
                 await fetch(scriptURL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify(payload)
                 });
-                alert("הטופс נשלח בהצלחה!");
+                alert("הטופס נשלח בהצלחה!");
                 form.reset();
                 location.reload(); 
             } catch (error) {
-                console.error('Error!', error);
+                console.error('Submission error:', error);
                 alert("שגיאה בשליחה.");
             } finally {
                 btn.disabled = false;
@@ -143,37 +116,29 @@
             reader.onload = async () => {
                 dataObj['fileData'] = reader.result;
                 dataObj['fileName'] = file.name;
-                await sendData(dataObj);
+                await sendToDatabase(dataObj);
             };
             reader.readAsDataURL(file);
         } else {
-            await sendData(dataObj);
+            await sendToDatabase(dataObj);
         }
     });
 
     function toggleExperience(hasExp) {
-        document.getElementById('no-experience-block').classList.toggle('hidden', hasExp);
         document.getElementById('resume-options-block').classList.toggle('hidden', !hasExp);
-        sendHeight();
-    }
-
-    function toggleResumeOptions(cont) {
-        document.getElementById('resume-options-block').classList.toggle('hidden', !cont);
-        sendHeight();
+        updateHeight();
     }
 
     function toggleResumeFields() {
         const val = document.getElementById('resume_method').value;
         document.getElementById('field-file').classList.toggle('hidden', val !== 'file');
-        document.getElementById('field-linkedin').classList.toggle('hidden', val !== 'linkedin');
-        document.getElementById('field-manual').classList.toggle('hidden', val !== 'manual');
-        sendHeight();
+        updateHeight();
     }
 
-    function sendHeight() {
+    function updateHeight() {
         if (window.parent) window.parent.postMessage({ height: document.body.scrollHeight }, "*");
     }
-    window.onload = sendHeight;
+    window.onload = updateHeight;
 </script>
 </body>
 </html>
