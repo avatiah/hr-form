@@ -20,6 +20,7 @@
         .sub-section { border-right: 4px solid #1a73e8; padding: 15px 20px 15px 15px; margin: 20px 0; background: #fafafa; border-radius: 4px; }
         .footer-text { margin-top: 25px; padding: 15px; background: #fff3e0; border-right: 5px solid #ff9800; border-radius: 4px; font-size: 0.9em; line-height: 1.5; }
         .btn-submit { background: #1a73e8; color: white; padding: 16px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 1.1em; font-weight: bold; margin-top: 20px; }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
         .required-star { color: #d32f2f; margin-right: 4px; }
     </style>
 </head>
@@ -111,7 +112,7 @@
                 </div>
 
                 <div class="field">
-                    <label>מוסד <span class="required-star">*</span></label>
+                    <label>מוסд <span class="required-star">*</span></label>
                     <span class="hint">מוסד ההשכלה האחרון (תיכון או השכלה גבוהה במידה ויש)</span>
                     <input type="text" name="education_name" class="manual-req">
                 </div>
@@ -154,12 +155,38 @@
             <strong>לתשומת לבך:</strong> הנתונים אינם נשמרים בשרת האתר לאחר השליחה.
         </div>
 
-        <button type="submit" class="btn-submit">שליחת המועמדות</button>
+        <button type="submit" class="btn-submit" id="submit-btn">שליחת המועמדות</button>
     </form>
 </div>
 
 <script>
-    // Функция управления обязательностью полей
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyWoqZeUPaAO-I1c3RnkJjYmZ2t2qUCClT7qrF_ddNb_pjEOB2h0ipa7F2aUMwYmk5h/exec';
+    const form = document.getElementById('hr-form');
+    const btn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.innerText = 'שולח...';
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                alert("הטופס נשלח בהצלחה!");
+                btn.disabled = false;
+                btn.innerText = 'שליחת המועמדות';
+                form.reset();
+                // Скрываем блоки после сброса
+                document.getElementById('no-experience-block').classList.add('hidden');
+                document.getElementById('resume-options-block').classList.add('hidden');
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                alert("אירעה שגיאה בשליחה. אנא נסה שוב.");
+                btn.disabled = false;
+                btn.innerText = 'שליחת המועמדות';
+            });
+    });
+
     function updateRequired(elements, isRequired) {
         elements.forEach(el => {
             if (isRequired) el.setAttribute('required', '');
@@ -216,7 +243,6 @@
         sendHeight();
     }
 
-    // Передача высоты для iframe в Osclass
     function sendHeight() {
         setTimeout(() => {
             window.parent.postMessage({ height: document.body.scrollHeight }, "*");
